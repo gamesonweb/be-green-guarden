@@ -1,6 +1,5 @@
 # Guarden
 ## Membres de l'équipe
-- GANGO DIALLO Mouhamed  
 - QUATELA Nicolas  
 - VAN DER TUIJN Ivan  
 
@@ -11,6 +10,8 @@ Tout au long de votre aventure, vous devez collecter les déchets que vous trouv
 
 Vous devrez braver de nombreux obstacles et dangers pour réussir votre quête. Vous pouvez compter sur les différentes capacités de votre robot pour vous aider à surmonter ces difficultés.
 
-Le jeu offre également la possibilité de rejouer l'aventure une fois la mal battu, mais cette fois-ci dans un environnement plus sain et propre.
-
 Alors, êtes-vous prêt à rejoindre la quete pour sauver la ville de la pollution ??
+
+## Lien du jeu
+
+https://gamesonweb.github.io/be-green-guarden/
