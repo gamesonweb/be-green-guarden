@@ -1,6 +1,6 @@
 export default class Dialogue {
     constructor (scene) {
-        this.tuto = [];
+        this.tuto = []; 
         this.initDialogues();
     }
 

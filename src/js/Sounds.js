@@ -4,7 +4,7 @@ export default class Sounds {
             loop: true,
             autoplay: true,
             volume: 0.1,
-          });
+          }); 
     
         this.wetFart = new BABYLON.Sound("wet_fart", "src/musics/wet_fart.mp3", scene, null, {
             volume: 5,
