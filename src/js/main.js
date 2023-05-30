@@ -1,7 +1,7 @@
 import Player from './player.js';
 import Map from './map.js';
 import Sounds from './sounds.js';
-import Dialogue from './Dialogue.js';
+import Dialogue from './dialogue.js';
 
 
 let canvas = document.getElementById("renderCanvas");
