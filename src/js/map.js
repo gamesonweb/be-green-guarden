@@ -16,8 +16,8 @@ export default class Map {
             // So index 0 correspond of the first generated door (bottom-left) and the index n correspond of the last generated door (top-right of the map)
             0: new BABYLON.Vector3(10, 22 + y, -40),   //x, y, z
             1: new BABYLON.Vector3(10, 34 + y, -37),
-            2: new BABYLON.Vector3(10, 10 + y + 34, -36),
-            3: new BABYLON.Vector3(10, 26 + y + 35, -35),
+            2: new BABYLON.Vector3(10, 54 + y, -36),
+            3: new BABYLON.Vector3(10, 74 + y, -37),
             4: new BABYLON.Vector3(10, 50 + y + 38, -37),
         };
         this.destinationIndex = 0;
@@ -36,6 +36,8 @@ export default class Map {
             meshes[0].freezeWorldMatrix()
             meshes[0].doNotSyncBoundingInfo = true;
             meshes[0].cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_STANDARD;
+            document.getElementById("loading-text").innerText = "Pret !";
+            document.getElementById("playButton").disabled = false;
         });
 
         /* TREES */
@@ -124,12 +126,12 @@ export default class Map {
             "                                                                                                                                                                                                        \n" +
             "                                                                                                      C                                                                                                 \n" +
             "                                                                                                     AA                                                                                                bo \n" +
-            "                                            C          E                                E     AA     AA             R                 E                                       C           R             \n" +
-            "                                 E         AAAAA      AAA                              AA     AA     AA                          C    AA             C      E              ←AAA                         \n" +
-            "                                 AA   AA   AaaaA      AaA              EC              AA     AA     AA                         AAA   AA          AAAAA     AA     AA       AaA                         \n" +
+            "                                                       E                                      AA     AA             R                                                         C           R             \n" +
+            "                                           AAAAA      AAA                              AA     AA     AA                               AA            E                      ←AAA                         \n" +
+            "                                 AA   AA   AaaaA      AaA                              AA     AA     AA                         AAA   AA          AAAAA     AA     AA       AaA                         \n" +
             "                       C    AA   AA   AA   AaaaA      AaA             AAAA       AA    AA     AA     AA                 ←AAA    AaA   AA          AaaaA     AA     AA       AaA                         \n" +
             "                      AA    AA   AA   AA   AaaaA      AaA             AaaA       AA    AA     AA     AA                   AA    AaA   AA          AaaaA     AA     AA       AaA                         \n" +
-            "     S   ↑   E AA  ↑  AA↑↑↑↑AA↑↑↑AA↑↑↑AA↑↑↑AaaaA↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑AaaA↑↑↑↑↑↑↑AA↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑AA↑↑↑↑AaA↑↑↑AA↑↑↑↑↑↑↑↑↑↑AaaaA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑     M \n";
+            "     S   ↑     AA  ↑  AA↑↑↑↑AA↑↑↑AA↑↑↑AA↑↑↑AaaaA↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑AaaA↑↑↑↑↑↑↑AA↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑AA↑↑↑↑AaA↑↑↑AA↑↑↑↑↑↑↑↑↑↑AaaaA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑     M \n";
 
 
         /* UNDERGROUND */
@@ -140,26 +142,26 @@ export default class Map {
 
             // TODO : LEVEL 4
 
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA  AaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA  AaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA  AAaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA    AAAAaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAl      AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAA    AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAaaaaaaaaaaaaaaA    AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA       AAaaaaaaaaaaaaA    AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   aaaA        AaaaaaaaaaaAAA    AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        AAA  ↑↑  E AaaaaaaaaaaA      AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaa↓↓↓↓↓↓↓↓aaaaaaaaaaA         AAA  AA   ←A        AA    AAaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaAA  ↓↓↓↓↓↓↓↓        ↓↓↓↓↓↓↓↓↓aA         AAA  AA   ←A        ←A   AAaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaA→                           AA   ↑↑      A   A              A   AaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaA→         ←A                AA   AA      A   A                  AaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaA    ↑    ←A   ↑     E      AA   AAE         A                C AaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaAAAA    A         A→                 A         CA        AAAA  AAAAAaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaA       AE        A→          C      A        AAA               ←AaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaA   C                      AAAAAAAAAAA↑↑↑↑↑↑↑↑↑↑        ↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaAAAAAA↑↑↑↑↑       ↑↑↑↑↑↑    AaaaaaaaaaAAAAAAAAAA↑↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaAAAAA↑↑↑↑↑↑↑AAAAAA↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
 
             ///////////// TOaO : LEEEEEEEEEEEEVEL 3
 
@@ -167,42 +169,42 @@ export default class Map {
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaa                                                                aaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaa                                                                aaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaa                                                                    aaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaa                                                                    aaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaA                                                 R                  aaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaA                                                                    aaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaAAA                                        C      ↑↑                   aaaaaAAAaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                             ↑           AAAA    AA   ↑↑                      AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                             A   AAA     AaaA    AA   AA                      AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                             A   ↑       AaaA    AA   AA    ↑↑                AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                                EA       AaaA    AA   AA    AA                AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                                 A       AaaA↑↑↑↑AA   AA    AA                AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaAA            R           AAA            AaaaAAAAAA↑↑↑AA    AA                AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaAA  C                   AAaa            AaaaaaaaaaAAAAA↑↑↑↑AA               ẂAaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaAAAA↑↑↑↑↑↑↑↑↑↑↑↑↑↑AAAAAAa↑↑↑↑↑↑↑↑↑↑↑↑AaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaAAAAAAAAAAAAAAAAaaaaaaaAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
 
             ///////////// TOaO : LEEEEEEEEEEEEVEL 2
 
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  aa   aaaa   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→   a      ↓     AAAaaaaaaaaaAAAAAAAAAAaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→   ↓             AAAaaaaaaaaA        Aaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA       R         ↓↓AaaaaaaaaA        Aaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaa   aaaaaaaA                  AaaaaaaaaaA        Aaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaa a       aaaA    ↑↑↑↑↑↑        ←AaaaaaaaaA   AAAAAAaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  aa   aaaa   aaaaaaaaaaaaaaaaaaAAaaa    aaaAAAaaaaaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→   a      ↓     AAAaaaaaaaaaAAAA               AAaaaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→   ↓             AAAaaaaaaaaA                    Aaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA       R         ↓↓AaaaaaaaaA                     Aaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaa   aaaaaaaA                  AaaaaaaaaaA           E      ẂAaaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaa a       aaaA    ↑↑↑↑↑↑        ←AaaaaaaaaA   AAAAAAAAAAAAAAAAAAaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaa aaaa   aaaaaa  ↓         aA   AAAAAAA        ←AaaaaaaaaA   Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaa   aa     aa               aA   Aaaaaaa    E   ←Aaa    aaA   Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA     a     ↓                 A   Aaaaaaa         A        A   Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA     ↓                          AAaaaaaa                      Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA              E                AAaaaaaaa↑        C            Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaa   aa     aa               aA   AaaaaaA    E   ←Aaa    aaA   Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA     a     ↓                 A   AaaaaaA         A        A   Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA     ↓                         EAAaaaaaA                      Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                               AAaaaaaaa↑        C            Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA                             Aaaaaaaaaaaa       AAA           Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA  C    AA            AA↑↑   ←Aaaaaaaaaaaa                     Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaaAAAAA  AA            AAAA↑↑   L  ←aaaaaaa↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaaAAAAA  AA            AAAA↑↑      ←aaaaaaa↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaa↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑aaaaaa      ←aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
@@ -217,7 +219,7 @@ export default class Map {
             "aaaaaaaaaaaA         AaaaaaA               AAaaaa  aAAA          AaA                Aaa         aaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaA               Aaaaa↓  ↓AAA   ↑↑↑↑↑  AaA                AA            aaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaA C             AAAAA     AA   AAAAA  AaA                 ↓          ←AaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaAAA↑↑    AA    ↓↓↓↓       A   AaAAA  AaA    C                       ←AaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaAAA↑↑    AA     ↓↓↓       A   AaAAA  AaA    C                       ←AaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaa↑↑↑↑AA    E              AaAA   AAA   AAAA           R       ←AAAaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaa          ↑        AaAA   AAA   AaaA↑↑ L              ←AAAAaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaa↑↑↑↑↑↑↑AAAAAAAAAAAAAaAA    AA   AaaAAA↑↑↑↑↑                aaaaaaaaaaaaaA\n" +
@@ -246,7 +248,7 @@ export default class Map {
             "aaaaaaaaaaaA         ↓                                                                             AAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA                                        A          A                                   AAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA                                       AA    L     AA                                   Aaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA       E   C          ↑      ↑     ↑  AAA↑↑↑↑↑↑↑↑↑↑AAA           E                     ẂAaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA           C          ↑      ↑     ↑  AAA↑↑↑↑↑↑↑↑↑↑AAA                                 ẂAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
@@ -388,10 +390,10 @@ export default class Map {
         block.checkCollisions = true;
         block.collisionRetryCount = 1;
         block.freezeWorldMatrix();
-
         const blockMaterial = new BABYLON.StandardMaterial("blockMaterial", this.scene);
         blockMaterial.freeze()
         blockMaterial.diffuseTexture = new BABYLON.Texture("src/materials/" + presetMaterial, this.scene);
+        blockMaterial.emissiveTexture = new BABYLON.Texture("src/materials/" + presetMaterial, this.scene);
         blockMaterial.maxSimultaneousLights = 100;
         block.material = blockMaterial;
 
@@ -403,6 +405,7 @@ export default class Map {
         const blockMaterial = new BABYLON.StandardMaterial("blockMaterial", this.scene);
         blockMaterial.freeze()
         blockMaterial.diffuseTexture = new BABYLON.Texture("src/materials/" + presetMaterial, this.scene);
+        blockMaterial.emissiveTexture = new BABYLON.Texture("src/materials/" + presetMaterial, this.scene);
         blockMaterial.maxSimultaneousLights = 100;
         block.material = blockMaterial;
 

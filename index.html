@@ -33,13 +33,59 @@
             width: 60px;
             height: 20px;
         }
+        #loadingScreen {
+            position: absolute;
+            background: rgb(1,0,36);
+            background: linear-gradient(90deg, rgba(1,0,36,1) 15%, rgba(9,121,50,1) 100%);
+            text-align: center;
+            font-size: 16px;
+            color: white;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #playButton {
+            padding: 25px 40px;
+            font-size: 16px;
+            font: small-caps bold 24px/1 sans-serif;
+        }
+        #loading-text {
+            margin-bottom: 5vh;
+        }
+        h1 {
+            font: small-caps bold 24px/1 sans-serif;
+            font-size: 5vh;
+        }
+
+        p {
+
+        }
+
     </style>
 </head>
 <body>
+    <div id="loadingScreen">
+        <h1>Guarden</h1>
+        <button id="playButton" onclick="onClickButtonToPlay()" disabled>Play</button>
+        <div id="progress">
+            <p id="loading-text">Loading...</p>
+        </div>
+        <img src="src/textures/keyboard-layout-info.png">
+    </div>
+
     <div id="fps">0</div>
     <div id="youLoseText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10vmin; color: red;-webkit-text-stroke-width: 2px;
     -webkit-text-stroke-color: black;user-select: none; visibility: hidden;">Perdu !</div>
     <canvas id="renderCanvas"></canvas>
     <script type="module" src="src/js/main.js"></script>
+    <script>
+        function onClickButtonToPlay() {
+            document.getElementById("loadingScreen").style.display = "none";
+        }
+    </script>
 </body>
 </html>

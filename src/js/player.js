@@ -5,7 +5,8 @@ export default class Player {
         this.body = this.createPlayer(position);
         // Energy
         this.maxEnergy = 40;
-        this.bar = this.initEnergyBar();
+        //this.bar = this.initEnergyBar();
+        this.bar = new BABYLON.GUI.Rectangle();
 
         // jump
         this.isJumping = false;

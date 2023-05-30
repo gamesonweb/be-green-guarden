@@ -23,11 +23,12 @@ let skybox;
 let spawn;
 let spawnpoint;
 let sounds
+let hasStartedPlaying = false;
 let preset = {
     "fog": "#6b6e6b",
-    "material_block_A": "cobblestone.png",
-    "material_block_B": "clay.png",
-    "material_plane_A": "clay.png",
+    "material_block_A": "cobble.jpg",
+    "material_block_B": "cobblestone.png",
+    "material_plane_A": "cobblestone.png",
     "material_spike_A": "bloody_spike.jpg",
     "skybox_texture": "normal/skybox",
     "light_color": "#1351FF"
@@ -77,6 +78,10 @@ let initMovementHandler = function (scene) {
 
     // Register the keyboard events OnKeyDownTrigger
     scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+        if (hasStartedPlaying == false){
+            player.bar = player.initEnergyBar();
+            hasStartedPlaying = true;
+        }
         switch (evt.sourceEvent.key) {
             case "w":
                 if (player.canDash && !player.isDashing) {
@@ -183,9 +188,13 @@ let initMovementHandler = function (scene) {
                     }, 50);
                     break;
             }
-        }
+        }  
         player.body.moveWithCollisions(new BABYLON.Vector3(0, player.jumpVelocity * engine.getDeltaTime() / 1000, 0));
-        player.jumpVelocity -= 10 * engine.getDeltaTime() / 1000;
+        if (player.jumpVelocity > -20) {  // change this value to change the gravity
+            
+            player.jumpVelocity -= 10 * engine.getDeltaTime() / 1000;
+        }
+
     });
 }
 
@@ -257,6 +266,8 @@ let playDeath = function () {
     }, 3000);
 }
 
+
+
 let createScene = function () {
     let scene = new BABYLON.Scene(engine);
     scene.createDefaultEnvironment({createGround: false, createSkybox: false})
@@ -266,6 +277,8 @@ let createScene = function () {
     scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     scene.freezeActiveMeshes();
     scene.blockMaterialDirtyMechanism = true;
+    // limit fps to 60
+    
 
     // load level music and play it indefinitely
     sounds = new Sounds();
@@ -284,7 +297,7 @@ let createScene = function () {
 
     skybox = map.createSkyBox();
     // Player creation
-    player = new Player(spawn, 20, 5, 0.05, scene, engine);
+    player = new Player(spawn, 20, 5, 0.05*120/60, scene, engine);
     camMinZ = -250
     camMaxZ = 100
     camMinY = 5
@@ -295,19 +308,21 @@ let createScene = function () {
 
     // Import robot model
 
-    BABYLON.SceneLoader.ImportMesh("", "src/models/mech_drone/", "scene.gltf", scene, function (meshes) {
+    BABYLON.SceneLoader.ImportMesh("", "src/models/mech_drone/", "scene.glb", scene, function (meshes) {
         //scene.createDefaultLight(true);
         // make the object bigger
         let pointLight = new BABYLON.PointLight("PointLight", new BABYLON.Vector3(0, 0, 0), scene);
         pointLight.intensity = 1;
         pointLight.range = 2;
         pointLight.radius = 2;
+        // use the basic animation of the model
+        meshes[0].animations = meshes[0].animations.slice(0, 1);
 
         meshes[0].scaling = new BABYLON.Vector3(3.3, 3.3, 3.3);
         meshes[0].position.y = -0.8;
         meshes[0].parent = player.body;
         pointLight.parent = player.body;
-    });
+    }); 
 
 
     // GUI
@@ -379,6 +394,7 @@ let createScene = function () {
                         console.log("Intersection detected with mesh " + mesh.name);
                         checkpoint = Object.assign({}, mesh.metadata.pos)
                         sounds.checkpoint.play()
+                        player.fillEnergy();
                         mesh.metadata.taken = true;
                     }
 
@@ -413,8 +429,9 @@ let createScene = function () {
     return scene;
 };
 
-
 scene = createScene();
+
+
 
 engine.runRenderLoop(function () {
     cameraMovementCheck();

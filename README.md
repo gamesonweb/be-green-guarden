@@ -13,4 +13,4 @@ Vous devrez braver de nombreux obstacles et dangers pour réussir votre quête. 
 
 Le jeu offre également la possibilité de rejouer l'aventure une fois la mal battu, mais cette fois-ci dans un environnement plus sain et propre.
 
-Alors, êtes-vous prêt à rejoindre la quete pour sauver la ville de la pollution ?
+Alors, êtes-vous prêt à rejoindre la quete pour sauver la ville de la pollution ??
