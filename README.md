@@ -1,4 +1,4 @@
-# Guarden
+# Guarden 🌿
 ## Membres de l'équipe
 - QUATELA Nicolas  
 - VAN DER TUIJN Ivan  
@@ -14,4 +14,7 @@ Alors, êtes-vous prêt à rejoindre la quete pour sauver la ville de la polluti
 
 ## Lien du jeu
 
+###⚠️ Navigateurs supportés :⚠️
+- Chrome
+- Edge  
 https://gamesonweb.github.io/be-green-guarden/
