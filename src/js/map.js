@@ -224,8 +224,8 @@ export default class Map {
             "aaaaaaaaaaaA         AaaaaaaA     a     ↓                 A   AaaaaaA         A        A   Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA     ↓                         EAAaaaaaA                      Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA              R               NAAaaaaaaa↑        C            Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA                             Aaaaaaaaaaaa       AAA           Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA  CN   AA            AA↑↑   ←Aaaaaaaaaaaa                     Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                             AAaaaaaaaaaa       AAA           Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA  CN   AA            AA↑↑   ←AAaaaaaaaaaa                     Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaaAAAAA  AA            AAAA↑↑      ←aaaaaaa↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaa↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑aaaaaa      ←aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
