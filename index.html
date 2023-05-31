@@ -21,7 +21,7 @@
             width: 100%;
             height: 100%;
         }
-        #fps {
+        #numberTrash {
             position: absolute;
             background-color: black;
             border: 2px solid red;
@@ -61,15 +61,17 @@
             font-size: 5vh;
         }
 
-        p {
-
+        #dialogText span {
+            background-color: white;
         }
-
+        
     </style>
+
 </head>
 <body>
     <div id="loadingScreen">
         <h1>Guarden</h1>
+        <p>Pour une bien meilleure experience de jeu activez le son !</p>
         <button id="playButton" onclick="onClickButtonToPlay()" disabled>Play</button>
         <div id="progress">
             <p id="loading-text">Loading...</p>
@@ -77,21 +79,21 @@
         <img src="src/textures/keyboard-layout-info.png">
     </div>
 
-    <div id="fps">0</div>
+    <div id="numberTrash">0</div>
     <div id="youLoseText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10vmin; color: red;-webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: black;user-select: none; visibility: hidden;">Perdu !</div>
+    -webkit-text-stroke-color: black;user-select: none; visibility: hidden;">Plus d'énergie !</div>
+    <div id="theEnd" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16vmin; color: white;-webkit-text-stroke-width: 5px;
+    -webkit-text-stroke-color: black;user-select: none; visibility: hidden;">FIN !</div>
+    <!-- Show the text at the bottom of the screen -->
+    <div id ="text" style="position: absolute; bottom: 0; left: 50%; transform: translate(-50%, 0); font-size: 2vmin; color: black;-webkit-text-stroke-width: 1px; background-color: white;"></div>
+        <p id="dialogText"><span></span></p>
     <canvas id="renderCanvas"></canvas>
     <script type="module" src="src/js/main.js"></script>
-    <script type="module" src="src/js/collectible.js"></script>
-    <script type="module" src="src/js/dialogue.js"></script>
-    <script type="module" src="src/js/map.js"></script>
-    <script type="module" src="src/js/player.js"></script>
-    <script type="module" src="src/js/sounds.js"></script>
-    <script type="module" src="src/js/trashBar.js"></script>
     <script>
         function onClickButtonToPlay() {
             document.getElementById("loadingScreen").style.display = "none";
         }
+        
     </script>
 </body>
 </html>

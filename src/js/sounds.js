@@ -4,7 +4,7 @@ export default class Sounds {
             loop: true,
             autoplay: true,
             volume: 0.1,
-          }); 
+          });
     
         this.wetFart = new BABYLON.Sound("wet_fart", "src/musics/wet_fart.mp3", scene, null, {
             volume: 5,
@@ -30,12 +30,21 @@ export default class Sounds {
             offset: 0.3
          });
         this.lose_game = new BABYLON.Sound("lose_game", "src/musics/lose.mp3", scene, null, {
-            volume: 1,
+            volume: 0.4,
             offset: 0.3
          });
         this.checkpoint = new BABYLON.Sound("checkpoint", "src/musics/checkpoint.mp3", scene, null, {
-            volume: 1,
+            volume: 0.4,
             offset: 0.3
          });
+        this.drift = new BABYLON.Sound("drift", "src/musics/drift.mp3", scene, null, {
+            loop: true,
+            volume: 0.5,
+            offset: 0.3
+        });
+        this.victory = new BABYLON.Sound("victory", "src/musics/victory.mp3", scene, null, {
+            volume: 0.5,
+            offset: 0.3
+        });
     } 
 }

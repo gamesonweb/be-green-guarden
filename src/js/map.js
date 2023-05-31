@@ -1,5 +1,6 @@
 import Collectible from "./collectible.js";
 import TrashBar from './trashBar.js';
+import Dialogue from './dialogue.js';
 
 export default class Map {
 
@@ -7,7 +8,11 @@ export default class Map {
         this.scene = scene;
         this.trashBar = null;
         this.preset = preset;
+        this.cpt = 0;
+        this.collected = 0;
         this.meshIndex = 0;
+        this.dialog = new Dialogue();
+        this.dialogueActuel = null;
         //this.skybox = this.createSkyBox();
         this.numberTrash = 0;
 
@@ -19,15 +24,26 @@ export default class Map {
             2: new BABYLON.Vector3(10, 54 + y, -36),
             3: new BABYLON.Vector3(10, 74 + y, -37),
             4: new BABYLON.Vector3(10, 50 + y + 38, -37),
+            5: new BABYLON.Vector3(10, 5, 12),
         };
         this.destinationIndex = 0;
 
         /* CITY */
+
+        // Boss level import
+        BABYLON.SceneLoader.ImportMesh("", "src/models/", "buildify_city_build_modelboss_1.0.glb", scene, function (meshes) {
+            meshes[0].position.y = 0;
+            meshes[0].position.z = 180;
+            meshes[0].rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
+            meshes[0]._freeze();
+            meshes[0].disableEdgesRendering();
+            meshes[0].freezeWorldMatrix()
+            meshes[0].doNotSyncBoundingInfo = true;
+            meshes[0].cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_STANDARD;
+        });
+
         // City import
-
-
         BABYLON.SceneLoader.ImportMesh("", "src/models/", "buildify_city_build_modelSmall_1.0.glb", scene, function (meshes) {
-            console.log("City loaded !")
             meshes[0].position.y = 0;
             meshes[0].position.z = 0;
             meshes[0].rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
@@ -61,9 +77,9 @@ export default class Map {
 
 
         // BOSS CAR SMOKE
-        /*
+        
         BABYLON.SceneLoader.ImportMesh("", "src/models/", "free_car_001.gltf", scene, function (meshes) {
-            let pos = new BABYLON.Vector3(20, 0, -245)
+            let pos = new BABYLON.Vector3(10, 0, 130)
             let angle = Math.PI;
             let carModel
             carModel = meshes[0];
@@ -84,14 +100,14 @@ export default class Map {
         // Smoke under car
         for (let i = 0; i < 5; i++) {
             for (let j = 0; j < 5; j++) {
-                this.createSmokeParticle(-245 + i - 2.5, 0,  20 + j - 2.5, 2);
+                this.createSmokeParticle(130 + i - 2.5, 0,  5 + j - 2.5, 2);
             }
         }
-         */
+         
 
-        let sidewalk = BABYLON.MeshBuilder.CreateBox("block", {width: 22, height: 1, depth: 240}, scene);
+        let sidewalk = BABYLON.MeshBuilder.CreateBox("block", {width: 22, height: 1, depth: 550}, scene);
         sidewalk.position.y = -0.5;
-        sidewalk.position.z = -150;
+        sidewalk.position.z = -100;
         sidewalk.position.x = -6;
         sidewalk.checkCollisions = true;
         sidewalk.collisionRetryCount = 1;
@@ -108,30 +124,36 @@ export default class Map {
         sidewalkRight.checkCollisions = true;
         sidewalkRight.collisionRetryCount = 1;
 
-        let road = BABYLON.MeshBuilder.CreateBox("block", {width: 50, height: 0.5, depth: 240}, scene);
+        let sidewalkRightLeft = BABYLON.MeshBuilder.CreateBox("block", {width: 50, height: 1, depth: 10}, scene);
+        sidewalkRightLeft.position.y = -0.5;
+        sidewalkRightLeft.position.z = 5;
+        sidewalkRightLeft.checkCollisions = true;
+        sidewalkRightLeft.collisionRetryCount = 1;
+
+        let road = BABYLON.MeshBuilder.CreateBox("block", {width: 50, height: 0.5, depth: 550}, scene);
         road.position.y = -0.5;
-        road.position.z = -150;
+        road.position.z = -100;
         road.material = new BABYLON.StandardMaterial("roadMaterial", scene);
         road.material.diffuseColor = new BABYLON.Color3.FromHexString("#2F3337");
         road.checkCollisions = true;
         road.collisionRetryCount = 1;
 
         this.city =
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                                                                                                                        \n" +
-            "                                                                                                      C                                                                                                 \n" +
-            "                                                                                                     AA                                                                                                bo \n" +
-            "                                                       E                                      AA     AA             R                                                         C           R             \n" +
-            "                                           AAAAA      AAA                              AA     AA     AA                               AA            E                      ←AAA                         \n" +
-            "                                 AA   AA   AaaaA      AaA                              AA     AA     AA                         AAA   AA          AAAAA     AA     AA       AaA                         \n" +
-            "                       C    AA   AA   AA   AaaaA      AaA             AAAA       AA    AA     AA     AA                 ←AAA    AaA   AA          AaaaA     AA     AA       AaA                         \n" +
-            "                      AA    AA   AA   AA   AaaaA      AaA             AaaA       AA    AA     AA     AA                   AA    AaA   AA          AaaaA     AA     AA       AaA                         \n" +
-            "     S   ↑     AA  ↑  AA↑↑↑↑AA↑↑↑AA↑↑↑AA↑↑↑AaaaA↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑AaaA↑↑↑↑↑↑↑AA↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑AA↑↑↑↑AaA↑↑↑AA↑↑↑↑↑↑↑↑↑↑AaaaA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑     M \n";
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                                                                                                                          " + "                                                            " + "                                                                                                                          \n" +
+            "                                                                                                     NC                                                                                                   " + "                                                            " + "                                                                                                                          \n" +
+            "                                                              N                                      AA                                                                                                   " + "                                                            " + "                                                                      ←AA                                                 \n" +
+            "                                            N          E                                      AA     AA             R                                                         C           R               " + "                                                            " + "                                                      N               ←AA                                                 \n" +
+            "                                           AAAAA      AAA                              AA     AA     AA                               AA           NE               N      ←AAA                           " + "                                                            " + "                                        AA            AA                                                                  \n" +
+            "                            N    AA   AA   AaaaA      AaA                              AA     AA     AA                         AAA   AA          AAAAA     AA     AA       AaA                           " + "                                                            " + "                                       EAA           ←AA          R                                                       \n" +
+            "                       C    AA   AA   AA   AaaaA      AaA             AAAA       AA    AA     AA     AA                 ←AAA    AaA   AA          AaaaA     AA     AA       AaA                           " + "                                                            " + "                                      AAAA           ←AA                C        E     EN                                 \n" +
+            "                      AA    AA   AA   AA   AaaaA      AaA             AaaA       AA    AA     AA     AA                   AA    AaA   AA          AaaaA     AA     AA       AaA                           " + "                                                            " + "                                AA    AAAA           ←AA              ←AA       AA     AA           Y                     \n" +
+            "  S   N  ↑     AA  ↑  AA↑↑↑↑AA↑↑↑AA↑↑↑AA↑↑↑AaaaA↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑AaaA↑↑↑↑↑↑↑AA↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑AA↑↑↑↑AaA↑↑↑AA↑↑↑↑↑↑↑↑↑↑AaaaA↑↑↑↑↑AA↑↑↑↑↑AA↑↑↑↑↑↑↑AaA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑   N M   " + "                                                            " + "CN     ↑↑↑↑    ↑    ↑↑↑↑   AA   AA↑↑↑↑AAAA↑↑↑↑↑↑↑↑↑↑↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑AA↑↑↑↑↑↑↑AA↑↑↑↑↑AA  C    E  EEE  CN EXE            \n";
 
 
         /* UNDERGROUND */
@@ -142,26 +164,26 @@ export default class Map {
 
             // TODO : LEVEL 4
 
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA  AaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA  AaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA  AAaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA    AAAAaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAl      AaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAA    AaaaaaaaaaaaaA\n" +
+            "AAAAAAAAAAAA         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAA       AaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA    N    AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA        AAAaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA          AAAAaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAẂ  E l      AaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAA    AaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAaaaaaaaaaaaaaaA    AaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA       AAaaaaaaaaaaaaA    AaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   aaaA        AaaaaaaaaaaAAA    AaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        AAA  ↑↑  E AaaaaaaaaaaA      AaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaa↓↓↓↓↓↓↓↓aaaaaaaaaaA         AAA  AA   ←A        AA    AAaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaa↓↓↓↓↓↓↓↓aaaaaaaaaaA         AAA  AA   ←A        AA    AAAAaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaAA  ↓↓↓↓↓↓↓↓        ↓↓↓↓↓↓↓↓↓aA         AAA  AA   ←A        ←A   AAaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaA→                           AA   ↑↑      A   A              A   AaaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaA→         ←A                AA   AA      A   A                  AaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaA    ↑    ←A   ↑     E      AA   AAE         A                C AaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaA    ↑     A   ↑     E      AA   AAE         A                C AaaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaAAAA    A         A→                 A         CA        AAAA  AAAAAaaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaA       AE        A→          C      A        AAA               ←AaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaA   C                      AAAAAAAAAAA↑↑↑↑↑↑↑↑↑↑        ↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaA   CN                     AAAAAAAAAAA↑↑↑↑↑↑↑↑↑↑        ↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaAAAAAA↑↑↑↑↑       ↑↑↑↑↑↑    AaaaaaaaaaAAAAAAAAAA↑↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaAAAAA↑↑↑↑↑↑↑AAAAAA↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaAAAAA↑↑↑↑↑↑↑AAAAAA↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaẂA\n" +
 
             ///////////// TOaO : LEEEEEEEEEEEEVEL 3
 
@@ -180,8 +202,8 @@ export default class Map {
             "aaaaaaaaaaaA         AaaaaaaA                             A   AAA     AaaA    AA   AA                      AaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaA                             A   ↑       AaaA    AA   AA    ↑↑                AaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaA                                EA       AaaA    AA   AA    AA                AaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaA                                 A       AaaA↑↑↑↑AA   AA    AA                AaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaAA            R           AAA            AaaaAAAAAA↑↑↑AA    AA                AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaA                            N    A       AaaA↑↑↑↑AA   AA    AA                AaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaAA     N      R           AAA            AaaaAAAAAA↑↑↑AA    AA                AaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaAA  C                   AAaa            AaaaaaaaaaAAAAA↑↑↑↑AA               ẂAaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaAAAA↑↑↑↑↑↑↑↑↑↑↑↑↑↑AAAAAAa↑↑↑↑↑↑↑↑↑↑↑↑AaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaAAAAAAAAAAAAAAAAaaaaaaaAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
@@ -195,15 +217,15 @@ export default class Map {
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→   a      ↓     AAAaaaaaaaaaAAAA               AAaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→   ↓             AAAaaaaaaaaA                    Aaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA       R         ↓↓AaaaaaaaaA                     Aaa\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaa   aaaaaaaA                  AaaaaaaaaaA           E      ẂAaaa\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaa   aaaaaaaA                  AaaaaaaaaaA       N    E      ẂAaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaa a       aaaA    ↑↑↑↑↑↑        ←AaaaaaaaaA   AAAAAAAAAAAAAAAAAAaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaa aaaa   aaaaaa  ↓         aA   AAAAAAA        ←AaaaaaaaaA   Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaa   aa     aa               aA   AaaaaaA    E   ←Aaa    aaA   Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA     a     ↓                 A   AaaaaaA         A        A   Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA     ↓                         EAAaaaaaA                      Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA                               AAaaaaaaa↑        C            Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA              R               NAAaaaaaaa↑        C            Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaA                             Aaaaaaaaaaaa       AAA           Aaaaaaaaaaaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         AaaaaaaA  C    AA            AA↑↑   ←Aaaaaaaaaaaa                     Aaaaaaaaaaaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         AaaaaaaA  CN   AA            AA↑↑   ←Aaaaaaaaaaaa                     Aaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AaaaaaaaAAAAA  AA            AAAA↑↑      ←aaaaaaa↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaa↑↑AA↑↑↑↑↑↑↑↑↑↑↑↑aaaaaa      ←aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa↑↑↑↑↑↑aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
@@ -218,13 +240,13 @@ export default class Map {
             "aaaaaaaaaaaA         AaaaaaaA                ←aaaaaaaAA↓↓        AaA              Aaaaa        aaaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaA               AAaaaa  aAAA          AaA                Aaa         aaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaA               Aaaaa↓  ↓AAA   ↑↑↑↑↑  AaA                AA            aaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaA C             AAAAA     AA   AAAAA  AaA                 ↓          ←AaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaAAA↑↑    AA     ↓↓↓       A   AaAAA  AaA    C                       ←AaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaA CN            AAAAA     AA   AAAAA  AaA                 ↓          ←AaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaAAA↑↑    AA     ↓↓↓       A   AaAAA  AaA    C N                     ←AaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaa↑↑↑↑AA    E              AaAA   AAA   AAAA           R       ←AAAaaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaa          ↑        AaAA   AAA   AaaA↑↑ L              ←AAAAaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaa          ↑     N  AaAA   AAA   AaaA↑↑ L              ←AAAAaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaa↑↑↑↑↑↑↑AAAAAAAAAAAAAaAA    AA   AaaAAA↑↑↑↑↑                aaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA          AaaaaaAAAAA  L             aaaaaaaaaaaaaA\n" +
-            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA    E     Aaaaaaaaaaa↑↑↑↑↑          ẂaaaaaaaaaaaaaA\n" +
+            "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA    E   N Aaaaaaaaaaa↑↑↑↑↑          ẂaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAaaaaaaaaaaaaaaaa↑↑↑↑ LAAAAAaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa↑↑↑↑↑aaaaaaaaaaaaaaaA\n" +
             "aaaaaaaaaaaA         AaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA\n" +
@@ -245,10 +267,10 @@ export default class Map {
             "aaaaaaaaaaaA         AAAA   AAAA    ↓     ↓                                       A                AAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         AA        A                                                  ↓                 Aaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA         A         ↓                         E                                        AAAaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA         ↓                                                                             AAaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA         ↓                              N                                              AAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA                                        A          A                                   AAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaA                                       AA    L     AA                                   Aaaaaaaaaaaa\n" +
-            "aaaaaaaaaaaA           C          ↑      ↑     ↑  AAA↑↑↑↑↑↑↑↑↑↑AAA                                 ẂAaaaaaaaaaaa\n" +
+            "aaaaaaaaaaaA          NC          ↑      ↑     ↑  AAA↑↑↑↑↑↑↑↑↑↑AAA      ↑↑      N        ↑↑       ẂAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaa\n" +
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" +
@@ -275,7 +297,6 @@ export default class Map {
          Ẃ Exit door right _ |_
          Ẁ Exit door left  _| _
          L Light
-         l ladder
          K smoKe
          */
     }
@@ -331,7 +352,7 @@ export default class Map {
                         this.createExitDoor(i + zOffset, -l + yOffset, xOffset, "right");
                         break;
                     case "Ẁ": // Exit door left
-                        this.createExitDoor(i + zOffset, -l + yOffset, xOffset, new BABYLON.Vector3.Zero(), "left");
+                        this.createExitDoor(i + zOffset, -l + yOffset, xOffset, "left");
                         break;
                     case "P": // Plane A
                         this.createPlaneInstance(i + zOffset, -l + yOffset, xOffset, planeA, this.meshIndex);
@@ -373,8 +394,16 @@ export default class Map {
                     case "M":
                         new Collectible(this.scene, "manhole_cover", new BABYLON.Vector3(xOffset, -l + yOffset, i + zOffset), new BABYLON.Color3(100, 100, 0));
                         break;
+                    case "N":
+                        new Collectible(this.scene, "nextDiag", new BABYLON.Vector3(xOffset, -l + yOffset, i + zOffset), new BABYLON.Color3(100, 100, 0));
+                        break;
+                    case "X":
+                        new Collectible(this.scene, "fight", new BABYLON.Vector3(xOffset, -l + yOffset, i + zOffset), new BABYLON.Color3(100, 100, 0));
+                        break;
+                    case "Y":
+                        new Collectible(this.scene, "start_drift", new BABYLON.Vector3(xOffset, -l + yOffset, i + zOffset), new BABYLON.Color3(100, 100, 0));
+                        break;
                 }
-                console.log(this.meshIndex);
                 this.meshIndex++;
             }
         }
@@ -383,6 +412,7 @@ export default class Map {
 
         return spawn;
     }
+
 
     initOriginalBlock(presetMaterial) {
         let block = BABYLON.MeshBuilder.CreateBox("block", {size: 1}, this.scene);
@@ -496,7 +526,7 @@ export default class Map {
         lightSphere.position = light.position;
     }
 
-    createExitDoor(posZ, posY, posX, destination, LR) {
+    createExitDoor(posZ, posY, posX, LR) {
         let door = BABYLON.MeshBuilder.CreateBox("exitDoor", {size: 1, height: 2, width: 1, depth: 0.2}, this.scene);
         door.freezeWorldMatrix();
         if (LR === "right") {
@@ -506,6 +536,8 @@ export default class Map {
         }
         door.checkCollisions = true;
         door.showBoundingBox = true;
+        console.log(this.destinationIndex);
+        console.log( this.doorDestinations[this.destinationIndex]);
         door.metadata = this.doorDestinations[this.destinationIndex];
 
         const doorMaterial = new BABYLON.StandardMaterial("doorMaterial", this.scene);
@@ -592,9 +624,8 @@ export default class Map {
     createSmokeParticle(posZ, posY) {
         //BABYLON.ParticleHelper.CreateDefault(new BABYLON.Vector3(0, posY, posZ)).start();
         let particleSystem = new BABYLON.ParticleSystem("smoke", 2000, this.scene);
-
         // set the particle texture
-        let texture = new BABYLON.Texture("src/materials/cloud.png", this.scene);
+        let texture = new BABYLON.Texture("src/materials/cloud2.png", this.scene);
 
         particleSystem.particleTexture = texture;
         // set the emitter
@@ -638,34 +669,4 @@ export default class Map {
         });
     }
 
-    /* createParticuleAmbiant(posZ, posY, gravity) {
-        let particleSystem = new BABYLON.ParticleSystem("particles", 200, this.scene);
-        let fountain = BABYLON.Mesh.CreateBox("foutain", 0.01, this.scene);
-        fountain.position = new BABYLON.Vector3(10, posY, posZ);
-        particleSystem.particleTexture = new BABYLON.Texture("src/materials/flare.png", this.scene);
-        particleSystem.emitter = fountain;
-        particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0); // Starting all from
-        particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0); // To...
-        particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
-        particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
-        particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
-        particleSystem.minSize = 0.1;
-        particleSystem.maxSize = 1
-        particleSystem.emitRate = 2;
-        particleSystem.gravity = new BABYLON.Vector3(0, gravity, 0);
-        particleSystem.minEmitPower = 0;
-        particleSystem.maxEmitPower = 0;
-        particleSystem.minLifeTime = 1;
-        particleSystem.maxLifeTime = 5;
-        particleSystem.updateSpeed = 0.004;
-        let noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 256, this.scene);
-        noiseTexture.animationSpeedFactor = 5;
-        noiseTexture.persistence = 4;
-        noiseTexture.brightness = 0.5;
-        noiseTexture.octaves = 2;
-        particleSystem.noiseTexture = noiseTexture;
-        particleSystem.noiseStrength = new BABYLON.Vector3(100, 100, 100);
-        particleSystem.start();
-    }
-        */
 }  

@@ -5,6 +5,7 @@ export default class Player {
         this.body = this.createPlayer(position);
         // Energy
         this.maxEnergy = 40;
+        this.isInvincible = false;
         //this.bar = this.initEnergyBar();
         this.bar = new BABYLON.GUI.Rectangle();
 
@@ -32,9 +33,9 @@ export default class Player {
         cube.position = spawn;
         cube.ellipsoid = new BABYLON.Vector3(0.5,0.60,0.5);
         cube.checkCollisions = true;
-        cube.visibility = 0.1;
         cube.collisionRetryCount = 1;
-        cube.showBoundingBox = true;
+        cube.showBoundingBox = false;
+        cube.visibility = 0
 
         let cubeMaterial = new BABYLON.StandardMaterial("cubeMaterial",  this.scene);
         cubeMaterial.diffuseColor = new BABYLON.Color3(100, 100, 100);
@@ -136,7 +137,10 @@ export default class Player {
     }
 
     hasNoEnergy() {
-        return this.bar.widthInPixels === 0;
+        if (!this.isInvincible){
+            return this.bar.widthInPixels === 0;
+        }
+        return false;
     }
 
 

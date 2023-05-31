@@ -3,25 +3,29 @@ import Map from './map.js';
 import Sounds from './sounds.js';
 import Dialogue from './dialogue.js';
 
-
 let canvas = document.getElementById("renderCanvas");
 let engine = new BABYLON.Engine(canvas, true);
 let scene;
+let dialogueActuel = ""
+let dialog= new Dialogue() 
+let cpt = 0;
 let player;
 let camera;
 let map;
+let spawnpoint;
 let isPlayerTakingDamage = false;
-let dialogue = new Dialogue();
 let ruee = false;
-let fpsMonitor = document.getElementById("fps");
+let fpsMonitor = document.getElementById("numberTrash");
 let camMaxZ
 let camMinZ
 let camMaxY
 let camMinY
 let checkpoint;
 let skybox;
+let firstTrash = true;
 let spawn;
-let spawnpoint;
+let confirmedTrash = 0  
+let collectedTrash = 0;
 let sounds
 let hasStartedPlaying = false;
 let preset = {
@@ -40,16 +44,8 @@ let cameraSetup = function () {
     //camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3.Zero(), scene);
     camera.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
     camera.viewport = new BABYLON.Viewport(-0.25, -0.25, 1.5, 1.5);
-    //The goal distance of camera from target
-    // camera.radius = 50;
-    // The goal height of camera above local origin (centre) of target
-    // camera.heightOffset = 1;
-    // The goal rotation of camera around local origin (centre) of target in x y plane
-    // camera.rotationOffset = 90;
-    //Acceleration of camera in moving from current to goal position
-    // camera.cameraAcceleration = 0.1
     // This attaches the camera to the canvas
-    camera.attachControl(canvas, true);
+    //camera.attachControl(canvas, true);
     //camera.lockedTarget = player.body;
     camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
 }
@@ -151,17 +147,6 @@ let initMovementHandler = function (scene) {
 
     // Update the cube's position every frame
     scene.onAfterRenderObservable.add(function () {
-        /*
-        //console.log(this.isJumping)
-        if (player.isJumping) {
-            // collision dectected on the player
-            player.body.onCollideObservable.addOnce(function () {
-                console.log("Jumping collision")
-                player.isJumping = false;
-                player.jumpVelocity = 5;
-            });
-        }
-         */
         if (player.isMovingRight) {
             player.body.moveWithCollisions(new BABYLON.Vector3(0, 0, player.movementSpeed))
         }
@@ -202,8 +187,6 @@ function createSun() {
     let sunCity = new BABYLON.PointLight("SunnyCity", new BABYLON.Vector3(50, 200, -200), scene);
     let sun = new BABYLON.PointLight("Sunny", new BABYLON.Vector3(50, 200, 0), scene);
     sun.intensity = 2;
-    //light1.radius = 10;
-    //light1.range = 10;
     sun.setEnabled(true);
 
     let sunSphere = BABYLON.MeshBuilder.CreateSphere("Sphere0", {segments: 16, diameter: 4}, scene);
@@ -216,8 +199,6 @@ function createSun() {
     sunSphere.position = sun.position;
 
     sunCity.intensity = 2;
-    //light1.radius = 10;
-    //light1.range = 10;
     sunCity.setEnabled(true);
 
     let sunCitySphere = BABYLON.MeshBuilder.CreateSphere("Sphere00", {segments: 16, diameter: 4}, scene);
@@ -237,17 +218,19 @@ function createFog(preset, scene) {
     scene.fogDensity = 0.005;
     scene.fogStart = 60.0;
     scene.fogEnd = 80.0;
-}
+} 
+
 
 let playDeath = function () {
-    player.body.position = new BABYLON.Vector3(spawnpoint._x, spawnpoint._y, spawnpoint._z)
-    checkpoint = spawnpoint;
+    player.body.position = new BABYLON.Vector3(checkpoint._x, checkpoint._y, checkpoint._z)
+    //createFog(preset, scene);
+    //checkpoint = spawnpoint;
     let textDiv = document.getElementById("youLoseText");
     // Show the text
     textDiv.style.visibility = "visible";
     player.fillEnergy();
-    camera.position = new BABYLON.Vector3(30, 5, -247);
-    camera.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
+    //camera.position = new BABYLON.Vector3(30, 5, -247);
+    //camera.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
     sounds.lose_game.play();
     scene.meshes.forEach(function (mesh)  {
         if (mesh.name === "checkpoint"){
@@ -268,6 +251,7 @@ let playDeath = function () {
 
 
 
+
 let createScene = function () {
     let scene = new BABYLON.Scene(engine);
     scene.createDefaultEnvironment({createGround: false, createSkybox: false})
@@ -277,8 +261,6 @@ let createScene = function () {
     scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     scene.freezeActiveMeshes();
     scene.blockMaterialDirtyMechanism = true;
-    // limit fps to 60
-    
 
     // load level music and play it indefinitely
     sounds = new Sounds();
@@ -292,14 +274,12 @@ let createScene = function () {
     map.generate(-68, -1, 10, "map");
     spawn = map.generate(-250, 14.5, 10, "city");
 
-    //city = new City(scene);
-    //spawn = city.generate(-250, 14.5, 10)
 
     skybox = map.createSkyBox();
     // Player creation
     player = new Player(spawn, 20, 5, 0.05*120/60, scene, engine);
     camMinZ = -250
-    camMaxZ = 100
+    camMaxZ = 150
     camMinY = 5
     camMaxY = 60
     checkpoint = Object.assign({}, spawn);
@@ -307,9 +287,7 @@ let createScene = function () {
     cameraSetup();
 
     // Import robot model
-
     BABYLON.SceneLoader.ImportMesh("", "src/models/mech_drone/", "scene.glb", scene, function (meshes) {
-        //scene.createDefaultLight(true);
         // make the object bigger
         let pointLight = new BABYLON.PointLight("PointLight", new BABYLON.Vector3(0, 0, 0), scene);
         pointLight.intensity = 1;
@@ -324,25 +302,65 @@ let createScene = function () {
         pointLight.parent = player.body;
     }); 
 
-
-    // GUI
-    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-    var image = new BABYLON.GUI.Image("but", "src/expressions/mech_drone_question.png");
-    var text = new BABYLON.GUI.TextBlock("text", dialogue.tuto[0]);
-    text.color = "white";
-    image.width = "150px";
-    image.height = "150px";
-    image.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    image.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    text.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    advancedTexture.addControl(image);
-    advancedTexture.addControl(text);
-
     initMovementHandler(scene);
 
     scene.registerAfterRender(function () {
         scene.meshes.forEach(function (mesh) {
+            if (mesh.name === "nextDiag") {
+                if (mesh.intersectsMesh(player.body, true) && mesh.isEnabled()) {
+                    mesh.setEnabled(false);
+                    console.log("nextDiag");
+                    dialogueActuel = dialog.dialogues[cpt++];
+                    let text = document.getElementById("text");
+                    text.innerHTML = dialogueActuel;
+                    // Show the text
+                    //text.style.visibility = "visible";
+                    //setTimeout(function() {
+                    //    text.style.visibility = "hidden";
+                    //}, 5000);
+                    
+                }
+            }
+            if (mesh.name === "start_drift") {
+                if (mesh.intersectsMesh(player.body, true) && mesh.isEnabled()) {
+                    mesh.setEnabled(false);
+                    console.log("start_drift");
+                    sounds.drift.play();
+                }
+            }
+            if (mesh.name === "fight") {
+                if (mesh.intersectsMesh(player.body, true) && mesh.isEnabled()) {
+                    mesh.setEnabled(false);
+                    console.log("fight");
+                    dialogueActuel = dialog.dialogues[cpt++];
+                    let text = document.getElementById("text");
+                    text.innerHTML = "Arrête c'est pas bien";
+                    player.isInvincible = true;
+                    // Show the text
+                    setTimeout(function() {
+                        text.innerHTML = "Mr. Drifter : oui tu as raison jarrete";
+                        setTimeout(function() {
+                            sounds.drift.stop()
+                            // Start joy
+                            // print FIN
+                            scene.fogColor = BABYLON.Color3.FromHexString("#ffffff");
+                            scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+                            scene.fogDensity = 0.001;
+                            scene.fogStart = 200.0;
+                            scene.fogEnd = 200.0;
+                            console.log( scene.particleSystems);
+                            scene.particleSystems.forEach(t => {
+                                t.stop();
+                            })
+                            setTimeout(function() {
+                                sounds.victory.play()
+                                document.getElementById("theEnd").style.visibility = "visible";
+                            }, 1000);
+                        }, 2000);
+                    }, 8000);
+
+                }
+            }
             if (mesh.name === "collectible_reload_dash") {
                 // Rotation of dash boost
                 mesh.rotate(new BABYLON.Vector3(0, 1, 0), 0.05, BABYLON.Space.LOCAL);
@@ -354,7 +372,6 @@ let createScene = function () {
                     setTimeout(function (){
                         mesh.setEnabled(true);
                     }, 500)
-                    //mesh.dispose();
                 }
             } else if (mesh.name === "collectible_energy") {
                 if (mesh.intersectsMesh(player.body, true) && mesh.isEnabled()) {
@@ -363,7 +380,7 @@ let createScene = function () {
                     map.trashBar.fillTrash();
                     sounds.pickup_trash.play();
                     mesh.setEnabled(false);
-                    //mesh.dispose();
+                    collectedTrash += 1;
                 }
             } else if (mesh.name === "spike") {
                 if (mesh.intersectsMesh(player.body, true)) {
@@ -372,9 +389,16 @@ let createScene = function () {
                     let hitMaterial = new BABYLON.StandardMaterial("hitMaterial", scene);
                     hitMaterial.diffuseColor = new BABYLON.Color3(100, 0.5, 0);
                     player.body.material = hitMaterial;
-                    player.body.visibility = 0.5;
+                    player.body.visibility = 0;
                     player.body.position = new BABYLON.Vector3(checkpoint._x, checkpoint._y, checkpoint._z)
                     player.fillEnergy();
+                    collectedTrash = confirmedTrash;
+
+                    scene.meshes.forEach(function (mesh)  {
+                        if (mesh.name === "collectible_energy"){
+                            mesh.setEnabled(true);
+                        }
+                    })
 
                     if (!isPlayerTakingDamage) {
                         sounds.take_damage.play();
@@ -383,7 +407,7 @@ let createScene = function () {
                             let hitMaterial = new BABYLON.StandardMaterial("hitMaterial", scene);
                             hitMaterial.diffuseColor = new BABYLON.Color3(100, 100, 100);
                             player.body.material = hitMaterial;
-                            player.body.visibility = 0.1
+                            player.body.visibility = 0
                             isPlayerTakingDamage = false;
                         }, 500);
                     }
@@ -391,18 +415,16 @@ let createScene = function () {
             } else if (mesh.name === "checkpoint") {
                 if (mesh.intersectsMesh(player.body, true)) {
                     if (!mesh.metadata.taken) {
-                        console.log("Intersection detected with mesh " + mesh.name);
                         checkpoint = Object.assign({}, mesh.metadata.pos)
                         sounds.checkpoint.play()
                         player.fillEnergy();
                         mesh.metadata.taken = true;
+                        confirmedTrash = collectedTrash;
                     }
 
                 }
             } else if (mesh.name === "manhole_cover") {
                 if (mesh.intersectsMesh(player.body, true)) {
-                    console.log("Intersection detected with" + mesh.name);
-                    //mesh.dispose();
                     player.body.position.y += -3;
                     scene.fogColor = BABYLON.Color3.FromHexString("#124344");
                     scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
@@ -410,7 +432,7 @@ let createScene = function () {
                     scene.fogStart = 20.0;
                     scene.fogEnd = 22.0;
                     player.fillEnergy();
-                    camMinY = -150;
+                    camMinY = -150
                     skybox.material.reflectionTexture = new BABYLON.CubeTexture("src/skyboxs/" + "purple_cave/purple_cave", scene);
                 }
             }
@@ -419,7 +441,22 @@ let createScene = function () {
 
     player.body.onCollideObservable.add((collidedMesh) => {
         if (collidedMesh.name === "exitDoor") {
-            console.log("Collided with " + collidedMesh.name);
+            // Check if it is the last door before the end of cave
+            if (collidedMesh.metadata == "{X: 10 Y: 5 Z: 12}" ){
+                console.log("End of cave door")
+                //camera.rotation = new BABYLON.Vector3(Math.PI / 8, Math.PI / 2, 0)
+                let fogColor = BABYLON.Color3.FromHexString(preset.fog);
+                scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+                scene.fogColor = fogColor;
+                scene.fogDensity = 0.03;
+                scene.fogStart = 60.0;
+                scene.fogEnd = 80.0;
+                camera.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
+                camera.viewport = new BABYLON.Viewport(-0.25, -0.25, 1.5, 1.5);
+                camMinY = 3
+            }
+
+            console.log("Collided with " + collidedMesh.name + " " + collidedMesh.metadata);
             player.body.position = collidedMesh.metadata;
             camera.position = new BABYLON.Vector3(30, camera.position.y + 16, -8);
             sounds.open_close_door.play();
@@ -432,10 +469,9 @@ let createScene = function () {
 scene = createScene();
 
 
-
 engine.runRenderLoop(function () {
     cameraMovementCheck();
-    fpsMonitor.innerHTML = engine.getFps().toFixed() + " fps";
+    fpsMonitor.innerHTML = collectedTrash + "/" + map.numberTrash + " trash collected";
 
     if (player.hasNoEnergy()) {
         console.log("player has no energy !")
