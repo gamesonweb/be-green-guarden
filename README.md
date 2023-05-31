@@ -16,8 +16,9 @@ Alors, êtes-vous prêt à rejoindre la quete pour sauver la ville de la polluti
 
 ⚠️ Navigateurs supportés :⚠️  
 
+- Edge (recommandé)
 - Chrome
-- Edge
+
 
 https://gamesonweb.github.io/be-green-guarden/
 
